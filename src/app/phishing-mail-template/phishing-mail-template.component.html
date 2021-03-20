@@ -1,0 +1,205 @@
+<!-- Content heading and actions -->
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{title}}</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" (click)="onOpenModal(null, 'add')" class="btn btn-sm btn-outline-success">
+        <i-feather name="file-plus"></i-feather>
+        Add New Template
+        </button>
+    </div>
+</div>
+<!-- Content -->
+<div class="main-content">
+    <div class="row">
+        <div *ngFor="let mailTemplate of phishingMailTemplates" class="col-md-6 col-xl-4">
+            <div class="card m-b-30">
+                <div class="card-body row pb-0">
+                    <div class="col-12 card-title align-self-center mb-0">
+                        <h6>{{mailTemplate?.subject}}</h6>
+                    </div>
+                </div>
+                <div class="card-body pt-0">
+                    <div class="dropdown-divider"></div>
+                        <div>
+                            <p>{{mailTemplate?.body}}</p>
+                        </div>
+                    <div class="dropdown-divider"></div>
+                    <button (click)="onOpenModal(mailTemplate, 'preview')" class="btn btn-sm btn-secondary">
+                        <i-feather name="file-text"></i-feather>
+                        Preview 
+                    </button>
+                    <div class="float-right btn-group btn-group-sm">
+                        <a (click)="onOpenModal(mailTemplate, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i-feather name="edit2"></i-feather> </a>
+                        <a (click)="onOpenModal(mailTemplate, 'delete')" class="btn btn-danger tooltips" data-placement="top" data-original-title="Delete"><i-feather name="trash2"></i-feather></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Notification for no mail templates -->
+    <div *ngIf="phishingMailTemplates?.length === 0" >
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">NO Templates!</h4>
+            <p>No Phishing Email templates were found.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Add Template Modal -->
+<div class="modal fade" id="addTemplateModal" tabindex="-1" role="dialog" aria-labelledby="addTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addTemplateModalLabel">Add New Template</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <form #addForm="ngForm" (ngSubmit)="onAddTemplate(addForm)">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" ngModel name="subject" class="form-control" id="subject" placeholder="Subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="sender">Sender Email Address</label>
+                    <input type="email" ngModel name="sender" class="form-control" id="sender" placeholder="Sender email address" required>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label for="body">Body</label>
+                        <i-feather (click)="toggleShowHelp()" style="cursor: pointer;" class="ml-2" name="help-circle"></i-feather>
+                    </div>
+                    <div *ngIf="showHelp" class="card bg-light">
+                        <div class="card-header">Help</div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Compose an HTML template.
+                            </p>
+                            <p class="card-text">
+                                You can use <span class="text-muted">&lt;employee_name&gt;</span> and <span class="text-muted">&lt;phish_link&gt;</span> 
+                                placeholders to insert employee name and a generated phishing link to a specified location.
+                            </p>
+                        </div>
+                      </div>
+                    <textarea type="textarea" ngModel name="body" class="form-control" id="body" placeholder="Email body" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="add-template-form" class="btn btn-secondary" data-dismiss="modal">
+                        <i-feather name="x"></i-feather>
+                        Close
+                    </button>
+                    <button [disabled]="addForm.invalid" type="submit" class="btn btn-success" >
+                        <i-feather name="save"></i-feather>
+                        Save template
+                    </button>
+                 </div>
+            </form>
+         </div>
+      </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="updateTemplateModal" tabindex="-1" role="dialog" aria-labelledby="updateTemplateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateTemplateModalLabel">Edit Template {{editTemplate?.subject}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #editForm="ngForm">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" ngModel="{{editTemplate?.subject}}" name="subject" class="form-control" id="subject" placeholder="Subject">
+                </div>
+                <input type="hidden" ngModel="{{editTemplate?.id}}" name="id" class="form-control" id="id">
+                <div class="form-group">
+                    <label for="sender">Sender Email Address</label>
+                    <input type="email" ngModel="{{editTemplate?.sender}}" name="sender" class="form-control" id="sender" placeholder="Sender email address" required>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label for="body">Body</label>
+                        <i-feather (click)="toggleShowHelp()" style="cursor: pointer;" class="ml-2" name="help-circle"></i-feather>
+                    </div>
+                    <div *ngIf="showHelp" class="card bg-light">
+                        <div class="card-header">Help</div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                Compose an HTML template.
+                            </p>
+                            <p class="card-text">
+                                You can use <span class="text-muted">&lt;employee_name&gt;</span> and <span class="text-muted">&lt;phish_link&gt;</span> 
+                                placeholders to insert employee name and a generated phishing link to a specified location.
+                            </p>
+                        </div>
+                      </div>
+                    <textarea type="textarea" ngModel="{{editTemplate?.body}}" name="body" class="form-control" id="body" placeholder="Email body" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">
+                        <i-feather name="x"></i-feather>
+                        Close
+                    </button>
+                    <button (click)="onUpdateTemplate(editForm.value)" data-dismiss="modal" class="btn btn-primary" >
+                        <i-feather name="save"></i-feather>
+                        Save changes
+                    </button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteTemplateModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModelLabel">Delete Template</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete template {{deleteTemplate?.subject}}?</p>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i-feather name="x"></i-feather>
+                    No
+                </button>
+                <button (click)="onDeleteTemplate(deleteTemplate?.id)" class="btn btn-danger" data-dismiss="modal">
+                    <i-feather name="trash2"></i-feather>
+                    Yes
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewTemplateModal" tabindex="-1" role="dialog" aria-labelledby="previewModelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModelLabel">Preview Template</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><b>Subject:</b> {{previewTemplate?.subject}}</p>
+                <p><b>Sender:</b> {{previewTemplate?.sender}}</p>
+                <div>
+                    <p><b>Body:</b></p>
+                    <div [innerHTML]="previewTemplate?.body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

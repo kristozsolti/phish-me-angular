@@ -2,41 +2,73 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">{{title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-        </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
+        <button class="btn btn-sm btn-outline-info mr-2" (click)="toggleAvatars()">
+            <i-feather name="user"></i-feather>
+            {{showAvatars ? 'Hide' : 'Show'}} Avatars
         </button>
+        <div class="btn-group mr-2">
+            <button type="button" (click)="onOpenModal(null, 'add')" class="btn btn-sm btn-outline-success">
+                <i-feather name="user-plus"></i-feather>
+                Add Employee
+            </button>
+            <button type="button" (click)="onOpenModal(null, 'send-phishing-mail')" class="btn btn-sm btn-outline-primary">
+                <i-feather name="send"></i-feather>
+                Send Phishing Mail
+            </button>
+        </div>
     </div>
 </div>
 <!-- Content -->
 <div class="main-content">
-    <div *ngFor="let employee of employees" class="col-md-6 col-xl-3">
-        <div class="card m-b-30">
-           <div class="card-body row">
-              <div class="col-6">
-                 <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
-              </div>
-              <div class="col-6 card-title align-self-center mb-0">
-                 <h5>{{employee?.name}}</h5>
-                 <p class="m-0">{{employee?.jobTitle}}</p>
-              </div>
-           </div>
-           <ul class="list-group list-group-flush">
-              <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{employee?.email}}</li>
-              <!-- <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{employee?.phoneNumber}}</li> -->
-           </ul>
-           <div class="card-body">
-              <div class="float-right btn-group btn-group-sm">
-                 <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                 <a (click)="onOpenModal(employee, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
-              </div>
-           </div>
-        </div>
-     </div>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <!-- <th scope="col">Selected</th> -->
+            <th scope="col" *ngIf="showAvatars">Avatar</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phished</th>
+            <th scope="col">
+                <!-- <i-feather name="mail"></i-feather> -->
+                Email Address
+            </th>
+            <th scope="col">Job Title</th>
+            <th scope="col">Edit/Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let employee of employees">
+            <!-- <th scope="row">
+                <input type="checkbox" name="selectedEmployee" checked [value]="employee?.id">
+            </th> -->
+            <td *ngIf="showAvatars">
+                <img [src]="employee?.imageUrl" style="width: 50px;" [alt]="employee?.name" class="img-fluid rounded-circle w-60">
+            </td>
+            <td>
+                <h6>{{employee?.name}}</h6>
+            </td>
+            <td>
+                <h6>{{employee?.phishingCount}}</h6>
+            </td>
+            <td>
+                {{employee?.email}}
+            </td>
+            <td>
+                {{employee?.jobTitle}}
+            </td>
+            <td>
+                <div class="float-right btn-group btn-group-sm">
+                    <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit">
+                        <i-feather name="edit2"></i-feather> 
+                    </a>
+                    <a (click)="onOpenModal(employee, 'delete')" class="btn btn-danger tooltips" data-placement="top" data-original-title="Delete">
+                        <i-feather name="trash2"></i-feather>
+                    </a>
+                </div>
+            </td>
+          </tr>
+          
+        </tbody>
+      </table>
      <!-- Notification for no employees -->
     <div *ngIf="employees?.length == 0" >
         <div class="alert alert-info" role="alert">
@@ -75,8 +107,14 @@
                <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" required>
             </div>
             <div class="modal-footer">
-               <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-               <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+               <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">
+                    <i-feather name="x"></i-feather>
+                   Close
+                </button>
+               <button [disabled]="addForm.invalid" type="submit" class="btn btn-success" >
+                    <i-feather name="save"></i-feather>
+                   Save employee
+                </button>
             </div>
             </form>
          </div>
@@ -84,7 +122,7 @@
     </div>
 </div>
 <!-- Edit Modal -->
-<div class="modal fade" id="updateEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeEditModalLabel" aria-hidden="true">
+<div class="modal fade" id="updateEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="updateEmployeeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -113,8 +151,14 @@
                     <input type="text" ngModel="{{editEmployee?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                    <button (click)="onUpdateEmloyee(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-secondary">
+                        <i-feather name="x"></i-feather>
+                        Close
+                    </button>
+                    <button (click)="onUpdateEmloyee(editForm.value)" data-dismiss="modal" class="btn btn-primary" >
+                        <i-feather name="save"></i-feather>
+                        Save changes
+                    </button>
                 </div>
                 </form>
             </div>
@@ -134,9 +178,55 @@
             <div class="modal-body">
                 <p>Are you sure you want to delete employee {{deleteEmployee?.name}}?</p>
                 <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button (click)="onDeleteEmloyee(deleteEmployee?.id!)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i-feather name="x"></i-feather>
+                    No
+                </button>
+                <button (click)="onDeleteEmloyee(deleteEmployee?.id)" class="btn btn-danger" data-dismiss="modal">
+                    <i-feather name="trash2"></i-feather>
+                    Yes
+                </button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Send Phishing Mail Modal -->
+<div class="modal fade" id="sendPhishingMailModal" tabindex="-1" role="dialog" aria-labelledby="sendPhishingMailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendPhishingMailModalLabel">Send Phishing Mail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #sendMailForm="ngForm">
+                    <div *ngIf="phishingMailTemplates.length > 0">
+                        <p>Select a phishing email template to be sent.</p>
+                        <div>
+                            <label for="exampleFormControlSelect1">Phishing Email Template</label>
+                            <select class="form-control" id="phishingMailTemplateId" [(ngModel)]="phishingMailTemplateId" name="phishingMailTemplateId">
+                                <option *ngFor="let mailTemplate of phishingMailTemplates" [value]="mailTemplate?.id">{{mailTemplate?.subject}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="phishingMailTemplates.length === 0">
+                        <p>No phishing mail templates were found!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i-feather name="x"></i-feather>
+                            Cancel
+                        </button>
+                        <button (click)="onSendPhishingMail(sendMailForm.value)" [disabled]="phishingMailTemplates.length === 0" 
+                            class="btn btn-primary" data-dismiss="modal">
+                            <i-feather name="send"></i-feather>
+                            Send to all employees
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
