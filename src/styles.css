@@ -3,10 +3,9 @@ body {
   font-size: 0.875rem;
 }
 
-i-feather {
+.feather-icon {
   width: 16px;
   height: 16px;
-  /* vertical-align: text-bottom; */
 }
 
 /* Sidebar */
@@ -47,7 +46,7 @@ i-feather {
   color: #333;
 }
 
-.sidebar .nav-link i-feather {
+.sidebar .nav-link .feather-icon {
   margin-right: 4px;
   color: #999;
 }
@@ -56,8 +55,8 @@ i-feather {
   color: #007bff;
 }
 
-.sidebar .nav-link:hover i-feather,
-.sidebar .nav-link.active i-feather {
+.sidebar .nav-link:hover .feather-icon,
+.sidebar .nav-link.active .feather-icon {
   color: inherit;
 }
 

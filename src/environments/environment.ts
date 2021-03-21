@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiServerUrl: 'http://localhost:8080'
+  apiServerUrl: 'http://localhost:8080',
+  elasticsearchServerUrl: 'http://localhost:9200'
 };
 
 /*

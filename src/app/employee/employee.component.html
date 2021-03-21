@@ -1,21 +1,16 @@
 <!-- Content heading and actions -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">{{title}}</h1>
+    <h1 *ngIf="!searchEmployees" class="h2">{{title}}</h1>
+    <h1 *ngIf="searchEmployees" class="h2">Search {{title}}: {{searchTerm}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <button class="btn btn-sm btn-outline-info mr-2" (click)="toggleAvatars()">
-            <i-feather name="user"></i-feather>
+            <i-feather class="feather-icon" name="user"></i-feather>
             {{showAvatars ? 'Hide' : 'Show'}} Avatars
         </button>
-        <div class="btn-group mr-2">
-            <button type="button" (click)="onOpenModal(null, 'add')" class="btn btn-sm btn-outline-success">
-                <i-feather name="user-plus"></i-feather>
-                Add Employee
-            </button>
-            <button type="button" (click)="onOpenModal(null, 'send-phishing-mail')" class="btn btn-sm btn-outline-primary">
-                <i-feather name="send"></i-feather>
-                Send Phishing Mail
-            </button>
-        </div>
+        <button type="button" (click)="onOpenModal(null, 'add')" class="btn btn-sm btn-outline-success">
+            <i-feather class="feather-icon" name="user-plus"></i-feather>
+            Add Employee
+        </button>
     </div>
 </div>
 <!-- Content -->
@@ -28,7 +23,7 @@
             <th scope="col">Name</th>
             <th scope="col">Phished</th>
             <th scope="col">
-                <!-- <i-feather name="mail"></i-feather> -->
+                <!-- <i-feather class="feather-icon" name="mail"></i-feather> -->
                 Email Address
             </th>
             <th scope="col">Job Title</th>
@@ -58,10 +53,10 @@
             <td>
                 <div class="float-right btn-group btn-group-sm">
                     <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit">
-                        <i-feather name="edit2"></i-feather> 
+                        <i-feather class="feather-icon" name="edit2"></i-feather> 
                     </a>
                     <a (click)="onOpenModal(employee, 'delete')" class="btn btn-danger tooltips" data-placement="top" data-original-title="Delete">
-                        <i-feather name="trash2"></i-feather>
+                        <i-feather class="feather-icon" name="trash2"></i-feather>
                     </a>
                 </div>
             </td>
@@ -92,27 +87,27 @@
             <form #addForm="ngForm" (ngSubmit)="onAddEmloyee(addForm)">
             <div class="form-group">
                <label for="name">Name</label>
-               <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+               <input type="text" ngModel name="name" class="form-control" placeholder="Name" required>
             </div>
             <div class="form-group">
                <label for="email">Email Address</label>
-               <input type="email" ngModel name="email" class="form-control" id="email" placeholder="Email" required>
+               <input type="email" ngModel name="email" class="form-control" placeholder="Email" required>
             </div>
             <div class="form-group">
                <label for="phone">Job title</label>
-               <input type="text" ngModel name="jobTitle" class="form-control" id="jobTile" placeholder="Job title" required>
+               <input type="text" ngModel name="jobTitle" class="form-control" placeholder="Job title" required>
             </div>
             <div class="form-group">
                <label for="phone">Image URL</label>
-               <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" required>
+               <input type="text" ngModel name="imageUrl" class="form-control" placeholder="Image URL" required>
             </div>
             <div class="modal-footer">
                <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">
-                    <i-feather name="x"></i-feather>
+                    <i-feather class="feather-icon" name="x"></i-feather>
                    Close
                 </button>
                <button [disabled]="addForm.invalid" type="submit" class="btn btn-success" >
-                    <i-feather name="save"></i-feather>
+                    <i-feather class="feather-icon" name="save"></i-feather>
                    Save employee
                 </button>
             </div>
@@ -135,28 +130,28 @@
                 <form #editForm="ngForm">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" ngModel="{{editEmployee?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
+                    <input type="text" ngModel="{{editEmployee?.name}}" name="name" class="form-control" aria-describedby="emailHelp" placeholder="Name">
                 </div>
                 <input type="hidden" ngModel="{{editEmployee?.id}}" name="id" class="form-control" id="id">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" ngModel="{{editEmployee?.email}}" name="email" class="form-control" id="email" placeholder="Email">
+                    <input type="email" ngModel="{{editEmployee?.email}}" name="email" class="form-control" placeholder="Email">
                 </div>
                 <div class="form-group">
                     <label for="phone">Job title</label>
-                    <input type="text" ngModel="{{editEmployee?.jobTitle}}" name="jobTitle" class="form-control" id="jobTitle" placeholder="Job title">
+                    <input type="text" ngModel="{{editEmployee?.jobTitle}}" name="jobTitle" class="form-control" placeholder="Job title">
                 </div>
                 <div class="form-group">
                     <label for="phone">Image URL</label>
-                    <input type="text" ngModel="{{editEmployee?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+                    <input type="text" ngModel="{{editEmployee?.imageUrl}}" name="imageUrl" class="form-control" placeholder="Image URL">
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn btn-secondary">
-                        <i-feather name="x"></i-feather>
+                        <i-feather class="feather-icon" name="x"></i-feather>
                         Close
                     </button>
                     <button (click)="onUpdateEmloyee(editForm.value)" data-dismiss="modal" class="btn btn-primary" >
-                        <i-feather name="save"></i-feather>
+                        <i-feather class="feather-icon" name="save"></i-feather>
                         Save changes
                     </button>
                 </div>
@@ -179,54 +174,14 @@
                 <p>Are you sure you want to delete employee {{deleteEmployee?.name}}?</p>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i-feather name="x"></i-feather>
+                    <i-feather class="feather-icon" name="x"></i-feather>
                     No
                 </button>
                 <button (click)="onDeleteEmloyee(deleteEmployee?.id)" class="btn btn-danger" data-dismiss="modal">
-                    <i-feather name="trash2"></i-feather>
+                    <i-feather class="feather-icon" name="trash2"></i-feather>
                     Yes
                 </button>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Send Phishing Mail Modal -->
-<div class="modal fade" id="sendPhishingMailModal" tabindex="-1" role="dialog" aria-labelledby="sendPhishingMailModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sendPhishingMailModalLabel">Send Phishing Mail</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form #sendMailForm="ngForm">
-                    <div *ngIf="phishingMailTemplates.length > 0">
-                        <p>Select a phishing email template to be sent.</p>
-                        <div>
-                            <label for="exampleFormControlSelect1">Phishing Email Template</label>
-                            <select class="form-control" id="phishingMailTemplateId" [(ngModel)]="phishingMailTemplateId" name="phishingMailTemplateId">
-                                <option *ngFor="let mailTemplate of phishingMailTemplates" [value]="mailTemplate?.id">{{mailTemplate?.subject}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div *ngIf="phishingMailTemplates.length === 0">
-                        <p>No phishing mail templates were found!</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            <i-feather name="x"></i-feather>
-                            Cancel
-                        </button>
-                        <button (click)="onSendPhishingMail(sendMailForm.value)" [disabled]="phishingMailTemplates.length === 0" 
-                            class="btn btn-primary" data-dismiss="modal">
-                            <i-feather name="send"></i-feather>
-                            Send to all employees
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>

@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PhishingMailTemplateComponent } from './phishing-mail-template/phishing-mail-template.component';
 import { IToastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jquery.service';
+import { DelayedInputDirective } from './delayed-input/delayed-input.directive';
 
 const toastr: IToastr = window['toastr'];
 const jQuery = window['$'];
@@ -25,6 +26,7 @@ const jQuery = window['$'];
     EmployeeComponent,
     DashboardComponent,
     PhishingMailTemplateComponent,
+    DelayedInputDirective,
   ],
   imports: [
     BrowserModule,
@@ -37,6 +39,7 @@ const jQuery = window['$'];
     { provide: TOASTR_TOKEN, useValue: toastr },
     { provide: JQ_TOKEN, useValue: jQuery },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: []
 })
 export class AppModule { }

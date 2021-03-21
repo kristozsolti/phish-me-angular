@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnChanges, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
+import { SearchResult } from '../search/search-result';
+import { SearchService } from '../search/search.service';
 import { PhishingMailTemplate } from './phishing-mail-template';
 import { PhishingMailService } from './phishing-mail.service';
 
@@ -17,12 +19,28 @@ export class PhishingMailTemplateComponent implements OnInit {
   deleteTemplate: PhishingMailTemplate;
   previewTemplate: PhishingMailTemplate;
   showHelp = false;
+  searchTemplates = false;
+  searchTerm: string;
+
 
   constructor(private phishingMailService: PhishingMailService,
-              @Inject(TOASTR_TOKEN) private toastr: IToastr ) { }
+              @Inject(TOASTR_TOKEN) private toastr: IToastr,
+              private searchService: SearchService ) { }
 
   ngOnInit(): void {
-    this.getPhishingMailTemplates();
+    this.searchService.currentSearchResults.subscribe(
+      (mailTemplateSearch: SearchResult) => {
+        if (mailTemplateSearch.searchTerm === '' || !mailTemplateSearch.searchTerm) {
+          this.getPhishingMailTemplates();
+          this.searchTemplates = false;
+        } else if (mailTemplateSearch.type === 'phishing-mail-template') {
+          this.phishingMailTemplates = mailTemplateSearch.result;
+          this.searchTerm = mailTemplateSearch.searchTerm;
+          this.searchTemplates = true;
+          console.log(mailTemplateSearch);
+        }
+      }
+  );
   }
 
   toggleShowHelp(): void {

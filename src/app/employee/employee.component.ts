@@ -1,32 +1,48 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
 import { Employee } from '../employee/employee';
 import { EmployeeService } from '../employee/employee.service';
-import { PhishingMailTemplate } from '../phishing-mail-template/phishing-mail-template';
-import { PhishingMailService } from '../phishing-mail-template/phishing-mail.service';
+import { SearchResult } from '../search/search-result';
+import { SearchService } from '../search/search.service';
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css']
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeeComponent implements OnInit, OnDestroy {
   title = 'Employees';
   employees: Employee[] = [];
   editEmployee!: Employee;
   deleteEmployee!: Employee;
-  phishingMailTemplates: PhishingMailTemplate[] = [];
-  phishingMailTemplateId: string;
   showAvatars = false;
+  searchEmployees = false;
+  searchTerm: string;
 
   constructor(private employeeService: EmployeeService,
-              private phishingMailService: PhishingMailService,
-              @Inject(TOASTR_TOKEN) private toastr: IToastr) { }
+              @Inject(TOASTR_TOKEN) private toastr: IToastr,
+              private searchService: SearchService) { }
 
   ngOnInit(): void {
-    this.getEmployees();
+    this.searchService.currentSearchResults.subscribe(
+        (employeeSearch: SearchResult) => {
+          if (employeeSearch.searchTerm === '' || !employeeSearch.searchTerm) {
+            this.getEmployees();
+            this.searchEmployees = false;
+          } else if (employeeSearch.type === 'employee') {
+            this.employees = employeeSearch.result;
+            this.searchTerm = employeeSearch.searchTerm;
+            this.searchEmployees = true;
+            console.log(employeeSearch);
+          }
+        }
+    );
+  }
+
+  ngOnDestroy(): void {
+    
   }
 
   toggleAvatars(): void {
@@ -46,20 +62,6 @@ export class EmployeeComponent implements OnInit {
     );
   }
 
-  getPhishingMailTemplates(): void {
-    this.phishingMailService.getPhishingMailTemplates().subscribe(
-      (response: PhishingMailTemplate[]) => {
-        this.phishingMailTemplates = response;
-        this.phishingMailTemplateId = response[0]?.id;
-        console.log(this.phishingMailTemplates);
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.message);
-        this.toastr.error('Could not load  mail templates from the server.', 'Error');
-      }
-    );
-  }
-
   onOpenModal(employee: Employee, mode: string): void {
     const container = document.getElementsByTagName('body')[0];
     const button = document.createElement('button');
@@ -75,9 +77,6 @@ export class EmployeeComponent implements OnInit {
     } else if (mode === 'delete') {
       this.deleteEmployee = employee;
       button.setAttribute('data-target', '#deleteEmployeeModal');
-    } else if (mode === 'send-phishing-mail') {
-      button.setAttribute('data-target', '#sendPhishingMailModal');
-      this.getPhishingMailTemplates();
     }
 
     container.appendChild(button);
@@ -127,20 +126,6 @@ export class EmployeeComponent implements OnInit {
       (error: HttpErrorResponse) => {
         console.log(error.message);
         this.toastr.error('Could not delete employee. Try again later.', 'Error');
-      }
-    );
-  }
-
-  onSendPhishingMail(mailTemplateId: any): void {
-    console.log(mailTemplateId);
-    this.phishingMailService.sendPhishingMail(mailTemplateId.phishingMailTemplateId).subscribe(
-      (response: void) => {
-        console.log(response);
-        this.toastr.info('Started sending the phishing emails.', 'Info');
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.message);
-        this.toastr.error('Could not send phishing mail. Try again later.', 'Error');
       }
     );
   }

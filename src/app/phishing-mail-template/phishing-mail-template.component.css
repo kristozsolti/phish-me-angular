@@ -1,4 +1,16 @@
-i-feather {
+.feather-icon {
     width: 16px;
     height: 16px;
+}
+
+.modal-dialog {
+    max-width: 80vw;
+}
+
+.delete-modal-dialog {
+    max-width: 500px;
+}
+
+#body-help-btn {
+    cursor: pointer;
 }

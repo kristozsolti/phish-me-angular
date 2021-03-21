@@ -5,68 +5,31 @@
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <i-feather name="home"></i-feather>
+                <i-feather class="feather-icon" name="home"></i-feather>
                 Dashboard <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['/employee']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <i-feather name="users"></i-feather>
+                <i-feather class="feather-icon" name="users"></i-feather>
                 Employees
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" [routerLink]="['/phishing-mail-template']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <i-feather name="file"></i-feather>
+                <i-feather class="feather-icon" name="file"></i-feather>
                 Phishing Email Templates
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="#">
-                <i-feather name="bar-chart-2"></i-feather>
+                <i-feather class="feather-icon" name="bar-chart-2"></i-feather>
                 Reports
               </a>
-            </li>
-          </ul>
-  
-          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Saved reports</span>
-            <a class="d-flex align-items-center text-muted" href="#" aria-label="Add a new report">
-              <i-feather name="plus-circle"></i-feather>
-            </a>
-          </h6>
-          <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i-feather name="file-text"></i-feather>
-                Current month
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i-feather name="file-text"></i-feather>
-                Last quarter
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i-feather name="file-text"></i-feather>
-                Social engagement
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <i-feather name="file-text"></i-feather>
-                Year-end sale
-              </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </nav>
-  
-      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-        <router-outlet></router-outlet>
-      </main>
     </div>
   </div>
   

@@ -6,13 +6,54 @@
         <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
         <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
         </div>
-        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-        <span data-feather="calendar"></span>
-        This week
+        <button type="button" (click)="onOpenModal('send-phishing-mail')" class="btn btn-sm btn-outline-primary">
+            <i-feather class="feather-icon" name="send"></i-feather>
+            Send Phishing Mail
         </button>
     </div>
 </div>
 <!-- Content -->
 <div class="main-content">
     <p>troloro</p>
+</div>
+
+<!-- Send Phishing Mail Modal -->
+<div class="modal fade" id="sendPhishingMailModal" tabindex="-1" role="dialog" aria-labelledby="sendPhishingMailModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendPhishingMailModalLabel">Send Phishing Mail</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #sendMailForm="ngForm">
+                    <div *ngIf="phishingMailTemplates.length > 0">
+                        <p>Select a phishing email template to be sent.</p>
+                        <div>
+                            <label for="exampleFormControlSelect1">Phishing Email Template</label>
+                            <select class="form-control" id="phishingMailTemplateId" [(ngModel)]="phishingMailTemplateId" name="phishingMailTemplateId">
+                                <option *ngFor="let mailTemplate of phishingMailTemplates" [value]="mailTemplate?.id">{{mailTemplate?.subject}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="phishingMailTemplates.length === 0">
+                        <p>No phishing mail templates were found!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            <i-feather class="feather-icon" name="x"></i-feather>
+                            Cancel
+                        </button>
+                        <button (click)="onSendPhishingMail(sendMailForm.value)" [disabled]="phishingMailTemplates.length === 0" 
+                            class="btn btn-primary" data-dismiss="modal">
+                            <i-feather class="feather-icon" name="send"></i-feather>
+                            Send to all employees
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
