@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
 import { Employee } from '../employee/employee';
 import { EmployeeService } from '../employee/employee.service';
@@ -20,29 +21,36 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   showAvatars = false;
   searchEmployees = false;
   searchTerm: string;
+  searchServiceSubscriptoin: Subscription;
+  employeeServiceSubscriptoin: Subscription;
 
   constructor(private employeeService: EmployeeService,
               @Inject(TOASTR_TOKEN) private toastr: IToastr,
               private searchService: SearchService) { }
 
   ngOnInit(): void {
-    this.searchService.currentSearchResults.subscribe(
-        (employeeSearch: SearchResult) => {
-          if (employeeSearch.searchTerm === '' || !employeeSearch.searchTerm) {
-            this.getEmployees();
-            this.searchEmployees = false;
-          } else if (employeeSearch.type === 'employee') {
-            this.employees = employeeSearch.result;
-            this.searchTerm = employeeSearch.searchTerm;
-            this.searchEmployees = true;
-            console.log(employeeSearch);
-          }
+    this.onFilterEmployees();
+  }
+
+  onFilterEmployees(): void {
+    this.searchServiceSubscriptoin = this.searchService.currentSearchResults.subscribe(
+      (employeeSearch: SearchResult) => {
+        if (employeeSearch.searchTerm === '' || !employeeSearch.searchTerm) {
+          this.getEmployees();
+          this.searchEmployees = false;
+        } else if (employeeSearch.type === 'employee') {
+          this.employees = employeeSearch.result;
+          this.searchTerm = employeeSearch.searchTerm;
+          this.searchEmployees = true;
+          console.log(employeeSearch);
         }
-    );
+      }
+  );
   }
 
   ngOnDestroy(): void {
-    
+    this.employeeServiceSubscriptoin.unsubscribe();
+    this.searchServiceSubscriptoin.unsubscribe();
   }
 
   toggleAvatars(): void {
@@ -50,7 +58,10 @@ export class EmployeeComponent implements OnInit, OnDestroy {
   }
 
   getEmployees(): void {
-    this.employeeService.getEmployees().subscribe(
+    this.searchTerm = '';
+    this.searchEmployees = false;
+
+    this.employeeServiceSubscriptoin = this.employeeService.getEmployees().subscribe(
       (response: Employee[]) => {
         this. employees = response;
         console.log(this.employees);
@@ -106,7 +117,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
     this.employeeService.updateEmployee(employee).subscribe(
       (response: Employee) => {
         console.log('Edited\n', response);
-        this.toastr.success('Employee successfully updated.', 'Success');
+        this.toastr.success(`${response.name} successfully updated.`, 'Success');
         this.getEmployees();
       },
       (error: HttpErrorResponse) => {

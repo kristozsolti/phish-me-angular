@@ -14,6 +14,14 @@ import { PhishingMailTemplateComponent } from './phishing-mail-template/phishing
 import { IToastr, TOASTR_TOKEN } from './common/toastr.service';
 import { JQ_TOKEN } from './common/jquery.service';
 import { DelayedInputDirective } from './delayed-input/delayed-input.directive';
+import { LoginComponent } from './login/login.component';
+import { ChartsModule } from 'ng2-charts';
+import { BarChartComponent } from './charts/bar-chart/bar-chart.component';
+import { BubbleChartComponent } from './charts/bubble-chart/bubble-chart.component';
+import { LineChartComponent } from './charts/line-chart/line-chart.component';
+import { PieChartComponent } from './charts/pie-chart/pie-chart.component';
+import { RadarChartComponent } from './charts/radar-chart/radar-chart.component';
+import { DoughnutChartComponent } from './charts/doughnut-chart/doughnut-chart.component';
 
 const toastr: IToastr = window['toastr'];
 const jQuery = window['$'];
@@ -27,13 +35,21 @@ const jQuery = window['$'];
     DashboardComponent,
     PhishingMailTemplateComponent,
     DelayedInputDirective,
+    LoginComponent,
+    BarChartComponent,
+    BubbleChartComponent,
+    LineChartComponent,
+    PieChartComponent,
+    RadarChartComponent,
+    DoughnutChartComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     IconsModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ChartsModule
   ],
   providers: [
     { provide: TOASTR_TOKEN, useValue: toastr },

@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, OnChanges, OnInit } from '@angular/core';
+import { Component, Inject, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
 import { SearchResult } from '../search/search-result';
 import { SearchService } from '../search/search.service';
@@ -12,7 +13,7 @@ import { PhishingMailService } from './phishing-mail.service';
   templateUrl: './phishing-mail-template.component.html',
   styleUrls: ['./phishing-mail-template.component.css']
 })
-export class PhishingMailTemplateComponent implements OnInit {
+export class PhishingMailTemplateComponent implements OnInit, OnDestroy {
   title = 'Manage Phishing Email Templates';
   phishingMailTemplates: PhishingMailTemplate[] = [];
   editTemplate: PhishingMailTemplate;
@@ -21,6 +22,8 @@ export class PhishingMailTemplateComponent implements OnInit {
   showHelp = false;
   searchTemplates = false;
   searchTerm: string;
+  searchServiceSubscription: Subscription;
+  mailTemplServiceSubscription: Subscription;
 
 
   constructor(private phishingMailService: PhishingMailService,
@@ -28,7 +31,7 @@ export class PhishingMailTemplateComponent implements OnInit {
               private searchService: SearchService ) { }
 
   ngOnInit(): void {
-    this.searchService.currentSearchResults.subscribe(
+    this.searchServiceSubscription = this.searchService.currentSearchResults.subscribe(
       (mailTemplateSearch: SearchResult) => {
         if (mailTemplateSearch.searchTerm === '' || !mailTemplateSearch.searchTerm) {
           this.getPhishingMailTemplates();
@@ -39,8 +42,12 @@ export class PhishingMailTemplateComponent implements OnInit {
           this.searchTemplates = true;
           console.log(mailTemplateSearch);
         }
-      }
-  );
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.mailTemplServiceSubscription.unsubscribe();
+    this.searchServiceSubscription.unsubscribe();
   }
 
   toggleShowHelp(): void {
@@ -48,7 +55,10 @@ export class PhishingMailTemplateComponent implements OnInit {
   }
 
   getPhishingMailTemplates(): void {
-    this.phishingMailService.getPhishingMailTemplates().subscribe(
+    this.searchTemplates = false;
+    this.searchTerm = '';
+
+    this.mailTemplServiceSubscription = this.phishingMailService.getPhishingMailTemplates().subscribe(
       (response: PhishingMailTemplate[]) => {
         console.log(response);
         this.phishingMailTemplates = response;

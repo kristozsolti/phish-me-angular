@@ -27,7 +27,7 @@ export class ElasticsearchService {
   private connect(): void {
     this.client = new Client({
       host: environment.elasticsearchServerUrl,
-      // log: 'trace'
+      log: 'trace'
     });
   }
 
@@ -35,7 +35,7 @@ export class ElasticsearchService {
     return this.client.search<SearchResponse<Employee>>({
       index: indexParam,
       type: typeParam,
-      filterPath: ['hits.hits._source', 'hits.total', '_scroll_id'],
+      filterPath: ['hits.hits', 'hits.total', '_scroll_id'],
       body: {
         query: {
           match_phrase_prefix: {
@@ -55,12 +55,12 @@ export class ElasticsearchService {
       ElasticsearchService.TYPE,
       ElasticsearchService.EMPLOYEE_NAME_FIELD,
       employeeName,
-      ['name', 'email', 'jobTitle', 'imageUrl', 'phishingCount']
+      ['_id', 'name', 'email', 'jobTitle', 'imageUrl', 'phishingCount']
     ).then(
       response => {
         if (response.hits.total.value > 0) {
           response.hits.hits.map(result => {
-            employees.push(result._source);
+            employees.push({id: result._id, ...result._source});
           });
         }
       }, error => {
@@ -85,7 +85,7 @@ export class ElasticsearchService {
       response => {
         if (response.hits.total.value > 0) {
           response.hits.hits.map(result => {
-            phishingMailTemplates.push(result._source);
+            phishingMailTemplates.push({id: result._id, ...result._source});
           });
         }
       }, error => {

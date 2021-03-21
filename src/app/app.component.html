@@ -1,5 +1,6 @@
-<app-navbar></app-navbar>
-<app-sidebar></app-sidebar>
-<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+<app-navbar *ngIf="isAdminAuthenticated"></app-navbar>
+<app-sidebar *ngIf="isAdminAuthenticated"></app-sidebar>
+<main role="main" *ngIf="isAdminAuthenticated" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
     <router-outlet></router-outlet>
 </main>
+<app-login *ngIf="!isAdminAuthenticated"></app-login>

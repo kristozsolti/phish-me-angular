@@ -2,10 +2,6 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">{{title}}</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group mr-2">
-        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-        </div>
         <button type="button" (click)="onOpenModal('send-phishing-mail')" class="btn btn-sm btn-outline-primary">
             <i-feather class="feather-icon" name="send"></i-feather>
             Send Phishing Mail
@@ -14,7 +10,62 @@
 </div>
 <!-- Content -->
 <div class="main-content">
-    <p>troloro</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-header">Bar Chart</div>
+                <div class="card-body">
+                    <app-bar-chart *ngIf="barChartReady" [type]="top10PhishedEmployeesChart?.type"
+                        [data]="top10PhishedEmployeesChart?.data"
+                        [labels]="top10PhishedEmployeesChart?.labels"
+                        [options]="top10PhishedEmployeesChart?.options"
+                        [plugins]="top10PhishedEmployeesChart?.plugins"
+                        [legend]="top10PhishedEmployeesChart?.legend"
+                    ></app-bar-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Bubble Chart</div>
+                <div class="card-body">
+                    <app-bubble-chart></app-bubble-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Doughnut Chart</div>
+                <div class="card-body">
+                    <app-doughnut-chart></app-doughnut-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Line Chart</div>
+                <div class="card-body">
+                    <app-line-chart></app-line-chart>
+                </div>  
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Pie Chart</div>
+                <div class="card-body">
+                    <app-pie-chart></app-pie-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Radar Chart</div>
+                <div class="card-body">
+                    <app-radar-chart></app-radar-chart>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Send Phishing Mail Modal -->

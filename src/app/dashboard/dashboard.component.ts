@@ -1,8 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
+import { BarChart } from '../charts/bar-chart/bar-chart';
+import { BarChartService } from '../charts/bar-chart/bar-chart.service';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
+import { Employee } from '../employee/employee';
 import { PhishingMailTemplate } from '../phishing-mail-template/phishing-mail-template';
 import { PhishingMailService } from '../phishing-mail-template/phishing-mail.service';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,11 +17,16 @@ export class DashboardComponent implements OnInit {
   title = 'Dashboard';
   phishingMailTemplates: PhishingMailTemplate[] = [];
   phishingMailTemplateId: string;
+  top10PhishedEmployeesChart: BarChart;
+  barChartReady = false;
 
   constructor(private phishingMailService: PhishingMailService,
-              @Inject(TOASTR_TOKEN) private toastr: IToastr) { }
+              @Inject(TOASTR_TOKEN) private toastr: IToastr,
+              private dashboardService: DashboardService,
+              private barChartService: BarChartService) { }
 
   ngOnInit(): void {
+    this.getTop10PhishedEmployees();
   }
 
   onOpenModal(mode: string): void {
@@ -56,6 +65,21 @@ export class DashboardComponent implements OnInit {
       (response: void) => {
         console.log(response);
         this.toastr.info('Started sending the phishing emails.', 'Info');
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.message);
+        this.toastr.error('Could not send phishing mail. Try again later.', 'Error');
+      }
+    );
+  }
+
+  getTop10PhishedEmployees(): void {
+    this.dashboardService.getTop10PhishedEmployees().subscribe(
+      (response: Employee[]) => {
+        console.log(response);
+        this.top10PhishedEmployeesChart = this.barChartService.convertEmployeesToBarChart(response);
+        console.log(this.top10PhishedEmployeesChart);
+        this.barChartReady = true;
       },
       (error: HttpErrorResponse) => {
         console.log(error.message);
