@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
 import { SearchResult } from '../search/search-result';
-import { SearchService } from '../search/search.service';
+import { SearchResultService } from '../search/search-result.service';
 import { PhishingMailTemplate } from './phishing-mail-template';
 import { PhishingMailService } from './phishing-mail.service';
 
@@ -28,7 +28,7 @@ export class PhishingMailTemplateComponent implements OnInit, OnDestroy {
 
   constructor(private phishingMailService: PhishingMailService,
               @Inject(TOASTR_TOKEN) private toastr: IToastr,
-              private searchService: SearchService ) { }
+              private searchService: SearchResultService ) { }
 
   ngOnInit(): void {
     this.searchServiceSubscription = this.searchService.currentSearchResults.subscribe(

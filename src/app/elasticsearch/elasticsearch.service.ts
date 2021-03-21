@@ -31,6 +31,14 @@ export class ElasticsearchService {
     });
   }
 
+  /**
+   * Makes a full text search on elasticsearch server and check if the search string starts with the queryTextParam.
+   * @param indexParam : index on es
+   * @param typeParam : type on es
+   * @param fieldParam : field on es
+   * @param queryTextParam : the text to be searched
+   * @param sourceParam : source on es
+   */
   fullTextSearch(indexParam: string, typeParam: string, fieldParam: string, queryTextParam: string, sourceParam: Array<string>): any {
     return this.client.search<SearchResponse<Employee>>({
       index: indexParam,
@@ -47,6 +55,10 @@ export class ElasticsearchService {
     });
   }
 
+  /**
+   * Searches on elasticsearch server for an employee name that starts with the employeeName input param.
+   * @param employeeName : the employee name to be searched
+   */
   searchEmployeeByName(employeeName: string): Observable<Employee[]> {
     const employees: Employee[] = [];
 
@@ -72,6 +84,10 @@ export class ElasticsearchService {
     return of<Employee[]>(employees);
   }
 
+  /**
+   * Searches on elasticsearch server for an phishing mail template that's subject starts with the mailTemplateSubject input param.
+   * @param mailTemplateSubject : the subject of the phishing mail template to be searched
+   */
   searchMailTemplateSubject(mailTemplateSubject: string): Observable<PhishingMailTemplate[]> {
     const phishingMailTemplates: PhishingMailTemplate[] = [];
 

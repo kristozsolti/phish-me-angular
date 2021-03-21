@@ -6,7 +6,7 @@ import { ElasticsearchService } from '../elasticsearch/elasticsearch.service';
 import { Employee } from '../employee/employee';
 import { PhishingMailTemplate } from '../phishing-mail-template/phishing-mail-template';
 import { SearchResult } from '../search/search-result';
-import { SearchService } from '../search/search.service';
+import { SearchResultService } from '../search/search-result.service';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../login/auth.service';
 
@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit {
   queryText = '';
 
   constructor(private es: ElasticsearchService,
-              private searchResultService: SearchService,
+              private searchResultService: SearchResultService,
               private router: Router,
               @Inject(TOASTR_TOKEN) private toastr: IToastr,
               private authService: AuthService) { }

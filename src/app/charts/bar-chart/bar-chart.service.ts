@@ -9,6 +9,10 @@ export class BarChartService {
 
   constructor() { }
 
+  /**
+   * Converts a list of employees to Bar Chart data.
+   * @param employees : list of employees that should be shown in a bar chart
+   */
   convertEmployeesToBarChart(employees: Employee[]): BarChart {
     const barChart: BarChart = {
       options: { responsive: true },

@@ -6,7 +6,7 @@ import { IToastr, TOASTR_TOKEN } from '../common/toastr.service';
 import { Employee } from '../employee/employee';
 import { EmployeeService } from '../employee/employee.service';
 import { SearchResult } from '../search/search-result';
-import { SearchService } from '../search/search.service';
+import { SearchResultService } from '../search/search-result.service';
 
 @Component({
   selector: 'app-employee',
@@ -26,7 +26,7 @@ export class EmployeeComponent implements OnInit, OnDestroy {
 
   constructor(private employeeService: EmployeeService,
               @Inject(TOASTR_TOKEN) private toastr: IToastr,
-              private searchService: SearchService) { }
+              private searchService: SearchResultService) { }
 
   ngOnInit(): void {
     this.onFilterEmployees();

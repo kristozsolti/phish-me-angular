@@ -23,12 +23,4 @@ export class AppComponent implements OnInit, OnDestroy {
     this.isAdminAuthenticatedSubs.unsubscribe();
   }
 
-  styleMainContainer(): string {
-    if (this.isAdminAuthenticated) {
-      return 'col-md-12 ml-sm-auto col-lg-12 px-md-12';
-    } else {
-      return 'col-md-9 ml-sm-auto col-lg-10 px-md-4';
-    }
-  }
-
 }

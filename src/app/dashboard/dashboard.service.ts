@@ -11,6 +11,10 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
 
+  /**
+   * Returns a list of employees ordered by phishing count
+   * desc and limit to first 10 results.
+   */
   getTop10PhishedEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>(`${environment.apiServerUrl}/dashboard/top-ten-phished`);
   }
